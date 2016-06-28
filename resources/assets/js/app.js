@@ -1,8 +1,13 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
+import VueMoment from 'vue-moment';
+
 Vue.use(VueResource);
+Vue.use(VueMoment);
 
 import Speaker from './Speaker.vue';
+import Modal from './Modal.vue'
+
 
 new Vue({
 	el : '#speaker-list',
@@ -12,10 +17,19 @@ new Vue({
 		speakers : [],
 		speakerSearch : '',
 		selectedDay : '',
-		times : []
+		times : [],
+		orderBy : 'Session time',
+		orderDirection : "DESC",
+		orderingOptions : [
+			"Last name",
+			"First name",
+			"Session time"
+		],
+		showModal : false,
+		currentTalk : false
 	},
 	components : {
-		Speaker
+		Speaker, Modal
 	},
 	ready(){
 
@@ -30,6 +44,14 @@ new Vue({
           // error callback
       });
 
+	},
+	watch : {
+		orderBy(){
+			this.sortSpeakers();
+		},
+		orderDirection(){
+			this.sortSpeakers();
+		}
 	},
 	filters : {
 		speakersFilter(speakers, value, keys){
@@ -76,8 +98,6 @@ new Vue({
 				slot.setMinutes(minutes);
 			}
 
-			console.log(slot);
-
 			return slot;
 
 		},
@@ -109,16 +129,52 @@ new Vue({
 		sortSpeakers(){
 
 			this.speakers.sort((a, b) => {
-				if (a.last_name > b.last_name) {
-				    return 1;
-				  }
-				  if (a.last_name < b.last_name) {
-				    return -1;
-				  }
-				  // a must be equal to b
-				 return 0;
+
+				var aProperty;
+				var bProperty;
+
+				switch(this.orderBy)
+				{
+					case "Last name":
+						aProperty = a.last_name;
+						bProperty = b.last_name;
+					break;
+					case "First name":
+						aProperty = a.first_name;
+						bProperty = b.first_name;
+					break;
+					case "Session time":
+						aProperty = a.time_start;
+						bProperty = b.time_start;
+					break;
+					default:
+					break;
+				}
+
+				if (aProperty > bProperty) {
+					return 1;
+				}
+				if (aProperty < bProperty) {
+					return -1;
+				}
+				
+				return 0;
+
 			});
+		
+			if (this.orderDirection == 'ASC')
+			{
+				this.speakers.reverse();
+			}
+		},
+		loadTalk(talk)
+		{
+			console.log(talk);
+			this.showModal = true;
+			this.currentTalk = talk;
 		}
+
+
 	}
 
 })
