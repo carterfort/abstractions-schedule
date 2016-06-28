@@ -1,10 +1,18 @@
 <template>
-  <div class="speaker-container">
-    <h4>{{speaker.first_name}} {{speaker.last_name}}</h4>
+  <div class="speaker-container" @click="$parent.loadTalk(speaker.talk)" >
+    <h4>
+      <span class="glyphicon glyphicon-star" v-if="currentTalk && speaker.talk.title == currentTalk.title"></span>
+      {{speaker.first_name}} {{speaker.last_name}}
 
-    {{speaker.speaking_day}}<br/>
+      <b class="pull-right">{{speaker.time_start | moment 'dddd, MMMM Do YYYY hh:mm a'}}</b>
+    </h4>
 
-    <span v-if="speaker.talk"> {{speaker.talk.title}}</span>
+    <hr/>
+
+    <h4 v-if="speaker.talk"> {{speaker.talk.title}}</h4>
+    <p v-if="speaker.talk">
+      {{speaker.talk.abstract}}
+    </p>
     
   </div>
 </template>
@@ -22,5 +30,8 @@ export default {
 
 <style>
 
+.speaker-container {
+  cursor: pointer;
+}
 
 </style>
