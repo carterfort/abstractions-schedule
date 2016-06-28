@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "gulp": "^3.8.8",
+    "laravel-elixir": "^4.0.0",
+    "laravel-elixir-vueify": "^1.0.0",
+    "vue-resource": "^0.9.1"
+  }
+}
