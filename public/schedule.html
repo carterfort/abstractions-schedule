@@ -6,8 +6,8 @@
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="/css/bootswatch.min.css" />
+	<link rel="stylesheet" href="/css/smoke.css" />
+	<script src="/js/smoke.min.js"></script>
 
 </head>
 <body>
@@ -15,28 +15,52 @@
 <div class="container">
 <br/>
 	<div id="speaker-list">
-		<div class="row">
-			<div class="col-sm-4">
-				<div class="btn-group btn-group-sm">
-					<button
-						class="btn"
-						v-bind:class="{ 'btn-default' : '' == selectedDay,
-										'btn-info' : '' != selectedDay }"
-						@click="selectedDay = ''">
-					All Days
-					</button>
-					<button 
-					class="btn" 
-					v-bind:class="{ 'btn-default' : day.name == selectedDay,
-									'btn-info' : day.name != selectedDay }"
-					v-for="day in days"
-					@click="selectedDay = day.name"
-					>
-					{{day.name}}
-					</button>
-					
-				</div>
-			</div>
+		<div class="btn-group btn-group-sm">
+			<button
+				class="btn"
+				v-bind:class="{ 'btn-default' : '' == selectedDay,
+								'btn-info' : '' != selectedDay }"
+				@click="selectedDay = ''">
+			All Days
+			</button>
+			<button 
+			class="btn" 
+			v-bind:class="{ 'btn-default' : day.name == selectedDay,
+							'btn-info' : day.name != selectedDay }"
+			v-for="day in days"
+			@click="selectedDay = day.name"
+			>
+			{{day.name}}
+			</button>
+			
+		</div>
+		<div class="btn-group btn-group-sm">
+			<button 
+				class="btn" 
+				v-bind:class="{ 'btn-info' : orderBy == option,
+							'btn-default' : orderBy != option }"
+				v-for="option in orderingOptions"
+				@click="orderBy = option"
+				>
+				{{option}}
+			</button>
+		</div>
+
+		<div class="btn-group btn-group-sm">
+			<button 
+				class="btn"
+				v-bind:class="{'btn-info' : orderDirection == 'ASC', 'btn-default' : orderDirection != 'ASC' }"
+				@click="orderDirection = 'ASC'"
+				>
+				<span class="glyphicon glyphicon-arrow-up"></span>
+			</button>
+			<button 
+				class="btn"
+				v-bind:class="{'btn-info' : orderDirection == 'DESC', 'btn-default' : orderDirection != 'DESC' }"
+				@click="orderDirection = 'DESC'"
+				>
+				<span class="glyphicon glyphicon-arrow-down"></span>
+			</button>
 		</div>
 
 		<br/>
@@ -53,6 +77,8 @@
 				<speaker :speaker="speaker"></speaker>
 			</li>
 		</ul>
+
+		  <modal :show.sync="showModal" :talk.sync="currentTalk"></modal>
 	</div>
 
 </div>
