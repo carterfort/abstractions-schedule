@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Speaker schedule</title>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="/css/bootswatch.min.css" />
+
+</head>
+<body>
+
+<div class="container">
+<br/>
+	<div id="speaker-list">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="btn-group btn-group-sm">
+					<button
+						class="btn"
+						v-bind:class="{ 'btn-default' : '' == selectedDay,
+										'btn-info' : '' != selectedDay }"
+						@click="selectedDay = ''">
+					All Days
+					</button>
+					<button 
+					class="btn" 
+					v-bind:class="{ 'btn-default' : day.name == selectedDay,
+									'btn-info' : day.name != selectedDay }"
+					v-for="day in days"
+					@click="selectedDay = day.name"
+					>
+					{{day.name}}
+					</button>
+					
+				</div>
+			</div>
+		</div>
+
+		<br/>
+
+		<p>
+			<div class="input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+				<input v-model="speakerSearch" class="form-control" />
+			</div>
+		</p>
+
+		<ul class="list-group">
+			<li class="list-group-item" v-for="speaker in speakers | speakersFilter ">
+				<speaker :speaker="speaker"></speaker>
+			</li>
+		</ul>
+	</div>
+
+</div>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>
