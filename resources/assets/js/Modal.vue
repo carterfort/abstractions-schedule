@@ -1,6 +1,6 @@
 <template>
-	<div class="modal-mask" v-show="show" transition="modal">
-	    <div class="modal-wrapper">
+	<div class="modal-mask" v-show="show"transition="modal" >
+	    <div class="modal-wrapper"  v-el:modal-mask @click="close($event)">
 	      <div class="modal-container">
 
 	        <div class="modal-header">
@@ -41,6 +41,14 @@ export default {
     talk : {
 
     }
+  },
+  methods: {
+  	close (event){
+  		if (event.target == this.$els.modalMask)
+  		{
+  			this.show = false;
+  		}
+  	}
   }
 };
 </script>
@@ -73,6 +81,7 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  z-index: 9999;
 }
 
 .modal-header h3 {
