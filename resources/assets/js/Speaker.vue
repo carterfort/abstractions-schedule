@@ -10,14 +10,16 @@
     <hr/>
 
     <h4 v-if="speaker.talk"> {{speaker.talk.title}}</h4>
-    <p v-if="speaker.talk">
-      {{speaker.talk.abstract}}
+    <p v-if="speaker.talk"
+    v-html="speaker.talk.abstract">
     </p>
     
   </div>
 </template>
 
 <script>
+
+
 export default {
   props : ['speaker'],
   data () {
