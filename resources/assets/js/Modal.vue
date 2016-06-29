@@ -13,7 +13,7 @@
 	        
 	        <div class="modal-body">
 	          <slot name="body">
-	           <p>{{talk.description}}</p>
+	           <div v-html="talk.description | marked"></div>
 	          </slot>
 	        </div>
 
@@ -31,6 +31,9 @@
 </template>
 
 <script>
+
+var marked = require("./marked.min.js")
+
 export default {
   props: {
     show: {
@@ -49,6 +52,9 @@ export default {
   			this.show = false;
   		}
   	}
+  },
+  filters: {
+   	marked: marked
   }
 };
 </script>
