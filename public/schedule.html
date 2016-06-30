@@ -11,7 +11,7 @@
 
 <div class="container">
 <br/>
-	<div id="speaker-list">
+	<div id="session-list">
 		<div class="btn-group btn-group-sm">
 			<button
 				class="btn"
@@ -31,6 +31,18 @@
 			</button>
 			
 		</div>
+
+		<div class="btn-group btn-group-sm">
+			<button class="btn"
+				v-bind:class="{'btn-info' : groupBy == option,
+								'btn-default' : groupBy != option}"
+				v-for="option in groupingOptions"
+				@click="groupBy = option"
+				>
+				{{option}}
+			</button>
+		</div>
+
 		<div class="btn-group btn-group-sm">
 			<button 
 				class="btn" 
@@ -65,17 +77,17 @@
 		<p>
 			<div class="input-group">
 				<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-				<input v-model="speakerSearch" class="form-control" />
+				<input v-model="sessionSearch" class="form-control" />
 			</div>
 		</p>
 
 		<ul class="list-group">
-			<li class="list-group-item" v-for="speaker in speakers | speakersFilter ">
-				<speaker :speaker="speaker"></speaker>
+			<li class="list-group-item" v-for="session in sessions | sessionsFilter ">
+				<session :session="session"></session>
 			</li>
 		</ul>
 
-		  <modal :show.sync="showModal" :talk.sync="currentTalk"></modal>
+		  <modal :show.sync="showModal" :session.sync="currentSession"></modal>
 	</div>
 
 </div>

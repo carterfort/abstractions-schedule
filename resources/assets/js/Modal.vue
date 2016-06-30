@@ -1,29 +1,38 @@
 <template>
-	<div class="modal-mask" v-show="show"transition="modal" >
+	<div class="modal-mask" v-show="show" transition="modal" v-if="session" >
 	    <div class="modal-wrapper"  v-el:modal-mask @click="close($event)">
 	      <div class="modal-container">
 
 	        <div class="modal-header">
 	          <slot name="header">
 	          	<h3>
-		            {{talk.title}}
+		            {{session.talk.title}}
 	            </h3>
 	          </slot>
 	        </div>
 	        
 	        <div class="modal-body">
 	          <slot name="body">
-	           <div v-html="talk.description | marked"></div>
+	           <div v-html="session.talk.description"></div>
 	          </slot>
-	        </div>
+            <hr />
 
-	        <div class="modal-footer">
-	          <slot name="footer">	            
-	            <button class="modal-default-button btn btn-success"
-	              @click="show = false">
-	              <span class="glyphicon glyphicon-thumbs-up"></span>
-	            </button>
-	          </slot>
+            <div class="row">
+              <div class="col-md-8">
+                <h4>{{session.speaker.name}}<br/>
+                  <small>
+                    {{session.time_start | moment 'dddd, MMMM Do YYYY h:mm a'}}  
+                  </small>
+                </h4>
+              </div>
+              <div class="col-md-4">
+                <br/>
+                <button class="modal-default-button btn btn-success"
+                  @click="show = false">
+                  <span class="glyphicon glyphicon-thumbs-up"></span>
+                </button>
+              </div>
+            </div>
 	        </div>
 	      </div>
 	    </div>
@@ -32,8 +41,6 @@
 
 <script>
 
-var marked = require("./marked.min.js")
-
 export default {
   props: {
     show: {
@@ -41,7 +48,7 @@ export default {
       required: true,
       twoWay: true    
     },
-    talk : {
+    session : {
 
     }
   },
@@ -52,9 +59,6 @@ export default {
   			this.show = false;
   		}
   	}
-  },
-  filters: {
-   	marked: marked
   }
 };
 </script>
@@ -79,7 +83,7 @@ export default {
 }
 
 .modal-container {
-  width: 600px;
+  width: 800px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;

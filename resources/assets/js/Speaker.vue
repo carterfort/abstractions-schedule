@@ -1,5 +1,5 @@
 <template>
-  <div class="speaker-container" @click="$parent.loadTalk(speaker.talk)" >
+  <div class="speaker-container" @click="$parent.loadTalk(session.talk)" >
     <h4>
       <span class="glyphicon glyphicon-star" v-if="currentTalk && speaker.talk.title == currentTalk.title"></span>
       {{speaker.first_name}} {{speaker.last_name}}

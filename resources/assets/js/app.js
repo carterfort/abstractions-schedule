@@ -5,17 +5,17 @@ import VueMoment from 'vue-moment';
 Vue.use(VueResource);
 Vue.use(VueMoment);
 
-import Speaker from './Speaker.vue';
+import Session from './Session.vue';
 import Modal from './Modal.vue'
 
 
 new Vue({
-	el : '#speaker-list',
+	el : '#session-list',
 	data : {
 		url : "/api/schedule.json",
 		days : [],
-		speakers : [],
-		speakerSearch : '',
+		sessions : [],
+		sessionSearch : '',
 		selectedDay : '',
 		times : [],
 		orderBy : 'Session time',
@@ -25,11 +25,16 @@ new Vue({
 			"First name",
 			"Session time"
 		],
+		groupingOptions : [
+			'Day',
+			'Track'
+		],
+		groupBy : 'Day',
 		showModal : false,
-		currentTalk : false
+		currentSession : false
 	},
 	components : {
-		Speaker, Modal
+		Session, Modal
 	},
 	ready(){
 
@@ -37,7 +42,8 @@ new Vue({
 
           // success callback
           this.days = goodResponse.data.days
-          this.setSpeakers()
+
+          this.setSessions()
 
       }, (badResponse) => {
 
@@ -47,26 +53,26 @@ new Vue({
 	},
 	watch : {
 		orderBy(){
-			this.sortSpeakers();
+			this.sortSessions();
 		},
 		orderDirection(){
-			this.sortSpeakers();
+			this.sortSessions();
 		}
 	},
 	filters : {
-		speakersFilter(speakers, value, keys){
+		sessionsFilter(sessions, value, keys){
 		    
 		    var filterBy = this.$options.filters.filterBy
-            speakers = filterBy.call(this, speakers, this.speakerSearch);
+            sessions = filterBy.call(this, sessions, this.sessionSearch);
 
-            speakers = speakers.filter((speaker) => {
+            sessions = sessions.filter((session) => {
             	if (this.selectedDay) {
-	            	return speaker.speaking_day == this.selectedDay
+	            	return session.day == this.selectedDay
             	}
 	            return true
             });
 
-			return speakers;
+			return sessions;
 		}
 	},
 	methods : {
@@ -101,34 +107,33 @@ new Vue({
 			return slot;
 
 		},
-		setSpeakers(){
+		setSessions(){
 			this.days.forEach((day) => {
 				day.stages.forEach((stage) => {
 					stage.sessions.forEach((session) => {
-						session.speaker.speaking_day = day.name;
-						session.speaker.time_end = this.speakingSlotForDayAndTime(day.name, session.time_end);
-						session.speaker.time_start = this.speakingSlotForDayAndTime(day.name, session.time_start);
-						session.speaker.talk = session.talk;
-						this.speakers.push(session.speaker);
+						session.time_start = this.speakingSlotForDayAndTime(day.name, session.time_start);
+						session.time_end = this.speakingSlotForDayAndTime(day.name, session.time_end);
+						session.day = day.name;
+						this.sessions.push(session);
 					});
 				})
 			});
 
-			this.speakers.forEach((speaker) => {
+			this.sessions.forEach((session) => {
 
-				let names = speaker.name.split(/[\s]/);
+				let names = session.speaker.name.split(/[\s]/);
 				let lastName = names.pop();
 
-				speaker.first_name = names.join(" ");
-				speaker.last_name = lastName;
+				session.speaker.first_name = names.join(" ");
+				session.speaker.last_name = lastName;
 
 			});
 
-			this.sortSpeakers();
+			this.sortSessions();
 		},
-		sortSpeakers(){
+		sortSessions(){
 
-			this.speakers.sort((a, b) => {
+			this.sessions.sort((a, b) => {
 
 				var aProperty;
 				var bProperty;
@@ -136,16 +141,16 @@ new Vue({
 				switch(this.orderBy)
 				{
 					case "Last name":
-						aProperty = a.last_name;
-						bProperty = b.last_name;
+						aProperty = a.speaker.last_name;
+						bProperty = b.speaker.last_name;
 					break;
 					case "First name":
-						aProperty = a.first_name;
-						bProperty = b.first_name;
+						aProperty = a.speaker.first_name;
+						bProperty = b.speaker.first_name;
 					break;
 					case "Session time":
-						aProperty = a.time_start;
-						bProperty = b.time_start;
+						aProperty = Date.parse(a.time_start);
+						bProperty = Date.parse(b.time_start);
 					break;
 					default:
 					break;
@@ -164,14 +169,13 @@ new Vue({
 		
 			if (this.orderDirection == 'ASC')
 			{
-				this.speakers.reverse();
+				this.sessions.reverse();
 			}
 		},
-		loadTalk(talk)
+		loadSession(session)
 		{
-			console.log(talk);
+			this.currentSession = session;
 			this.showModal = true;
-			this.currentTalk = talk;
 		}
 
 
