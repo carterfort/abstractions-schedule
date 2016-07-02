@@ -1,7 +1,7 @@
 <template>
-	<div class="session-container" @click="$parent.loadSession(session)">
+	<div class="session-container" @click="$root.loadSession(session)">
 		<h4>
-	      <span class="glyphicon glyphicon-star" v-if="currentSession && session.talk.title == currentSession.talk.title"></span>
+	      <span class="glyphicon glyphicon-star" v-if="$root.currentSession && session.talk.title == $root.currentSession.talk.title"></span>
 	      {{session.speaker.first_name}} {{session.speaker.last_name}}
 
 	      <b class="pull-right">
@@ -10,7 +10,7 @@
 	      		{{session.time_start | moment 'dddd, MMMM Do YYYY h:mm a'}}
       		</span>
       		<span v-else>
-      			Not yet scheduled
+      			{{session.day}} Time TBD
       		</span>
 
 	      </b>

@@ -7,6 +7,7 @@ Vue.use(VueMoment);
 
 import Session from './Session.vue';
 import Modal from './Modal.vue'
+import SessionGroup from './SessionGroup.vue';
 
 
 new Vue({
@@ -27,11 +28,17 @@ new Vue({
 		],
 		groupingOptions : [
 			'Day',
-			'Track'
+			'Stage'
 		],
+		groups : { 
+			"Day" : [], 
+			"Stage" : []
+		},
 		groupBy : 'Day',
+		stages : [],
 		showModal : false,
-		currentSession : false
+		currentSession : false,
+		currentGroupings : {}
 	},
 	components : {
 		Session, Modal
@@ -44,6 +51,8 @@ new Vue({
           this.days = goodResponse.data.days
 
           this.setSessions()
+          this.putSessionsIntoGroups();
+          this.currentGroupings = this.groups[this.groupBy];
 
       }, (badResponse) => {
 
@@ -54,9 +63,15 @@ new Vue({
 	watch : {
 		orderBy(){
 			this.sortSessions();
+			this.currentGroupings = this.groups[this.groupBy];
 		},
 		orderDirection(){
 			this.sortSessions();
+			this.currentGroupings = this.groups[this.groupBy];
+		},
+		groupBy(){
+			this.sortSessions();
+			this.currentGroupings = this.groups[this.groupBy]
 		}
 	},
 	filters : {
@@ -114,7 +129,9 @@ new Vue({
 						session.time_start = this.speakingSlotForDayAndTime(day.name, session.time_start);
 						session.time_end = this.speakingSlotForDayAndTime(day.name, session.time_end);
 						session.day = day.name;
+						session.stage = stage.name;
 						this.sessions.push(session);
+						this.addStage(stage.name);
 					});
 				})
 			});
@@ -130,6 +147,11 @@ new Vue({
 			});
 
 			this.sortSessions();
+		},
+		addStage(stage){
+			if (this.stages.indexOf(stage) === -1){
+				this.stages.push(stage);
+			}
 		},
 		sortSessions(){
 
@@ -176,6 +198,37 @@ new Vue({
 		{
 			this.currentSession = session;
 			this.showModal = true;
+		},
+		putSessionsIntoGroups()
+		{
+
+			this.sortSessions();
+
+			var stageSessions = [];
+
+			this.stages.forEach((stage) => {
+				stageSessions.push({"label" : stage, "sessions" : this.sessions.filter((session) => {
+					return session.stage == stage
+				})});
+			});
+
+			var daySessions = [];
+			let days = ["Thursday", "Friday", "Saturday"];
+
+			days.forEach((day) => {
+				daySessions.push({"label" : day, "sessions" : this.sessions.filter((session) => {
+					return session.day == day
+				})});
+			});
+
+			this.groups["Day"] = daySessions;
+			this.groups["Stage"] = stageSessions;
+		},
+		sessionsForDay(day)
+		{
+			return this.sessions.filter(function(session){
+				return session.day == day;
+			});
 		}
 
 

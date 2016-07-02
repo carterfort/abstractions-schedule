@@ -12,13 +12,14 @@
 	        </div>
 	        
 	        <div class="modal-body">
-	          <slot name="body">
+            <h4>About the talk</h4>
 	           <div v-html="session.talk.description"></div>
-	          </slot>
             <hr />
+            <h4>About the speaker</h4>
 
             <div class="row">
               <div class="col-md-8">
+                <img :src="session.speaker.external_image" class="img img-responsive" />
                 <h4>{{session.speaker.name}}<br/>
                   <small>
                     {{session.time_start | moment 'dddd, MMMM Do YYYY h:mm a'}}  
@@ -51,6 +52,16 @@ export default {
     session : {
 
     }
+  },
+  ready(){
+
+    document.addEventListener('keyup', function (evt) {
+        if (evt.keyCode == 27)
+        {
+          this.show = false;
+        }
+    }.bind(this), false);
+
   },
   methods: {
   	close (event){

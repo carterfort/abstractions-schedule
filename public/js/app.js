@@ -15995,7 +15995,7 @@ exports.insert = function (css) {
 },{}],8:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n\n.modal-mask {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, .5);\n  display: table;\n  -webkit-transition: opacity .3s ease;\n  transition: opacity .3s ease;\n}\n\n.modal-wrapper {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n.modal-container {\n  width: 800px;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  border-radius: 2px;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n  z-index: 9999;\n}\n\n.modal-header h3 {\n  margin-top: 0;\n  color: #42b983;\n}\n\n.modal-body {\n  margin: 20px 0;\n}\n\n.modal-default-button {\n  float: right;\n}\n\n/*\n * the following styles are auto-applied to elements with\n * v-transition=\"modal\" when their visiblity is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n\n.modal-enter, .modal-leave {\n  opacity: 0;\n}\n\n.modal-enter .modal-container,\n.modal-leave .modal-container {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n")
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -16009,6 +16009,15 @@ exports.default = {
     },
     session: {}
   },
+  ready: function ready() {
+
+    document.addEventListener('keyup', function (evt) {
+      if (evt.keyCode == 27) {
+        this.show = false;
+      }
+    }.bind(this), false);
+  },
+
   methods: {
     close: function close(event) {
       if (event.target == this.$els.modalMask) {
@@ -16018,7 +16027,7 @@ exports.default = {
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"modal-mask\" v-show=\"show\" transition=\"modal\" v-if=\"session\">\n\t    <div class=\"modal-wrapper\" v-el:modal-mask=\"\" @click=\"close($event)\">\n\t      <div class=\"modal-container\">\n\n\t        <div class=\"modal-header\">\n\t          <slot name=\"header\">\n\t          \t<h3>\n\t\t            {{session.talk.title}}\n\t            </h3>\n\t          </slot>\n\t        </div>\n\t        \n\t        <div class=\"modal-body\">\n\t          <slot name=\"body\">\n\t           <div v-html=\"session.talk.description\"></div>\n\t          </slot>\n            <hr>\n\n            <div class=\"row\">\n              <div class=\"col-md-8\">\n                <h4>{{session.speaker.name}}<br>\n                  <small>\n                    {{session.time_start | moment 'dddd, MMMM Do YYYY h:mm a'}}  \n                  </small>\n                </h4>\n              </div>\n              <div class=\"col-md-4\">\n                <br>\n                <button class=\"modal-default-button btn btn-success\" @click=\"show = false\">\n                  <span class=\"glyphicon glyphicon-thumbs-up\"></span>\n                </button>\n              </div>\n            </div>\n\t        </div>\n\t      </div>\n\t    </div>\n\t  </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"modal-mask\" v-show=\"show\" transition=\"modal\" v-if=\"session\">\n\t    <div class=\"modal-wrapper\" v-el:modal-mask=\"\" @click=\"close($event)\">\n\t      <div class=\"modal-container\">\n\n\t        <div class=\"modal-header\">\n\t          <slot name=\"header\">\n\t          \t<h3>\n\t\t            {{session.talk.title}}\n\t            </h3>\n\t          </slot>\n\t        </div>\n\t        \n\t        <div class=\"modal-body\">\n            <h4>About the talk</h4>\n\t           <div v-html=\"session.talk.description\"></div>\n            <hr>\n            <h4>About the speaker</h4>\n\n            <div class=\"row\">\n              <div class=\"col-md-8\">\n                <img :src=\"session.speaker.external_image\" class=\"img img-responsive\">\n                <h4>{{session.speaker.name}}<br>\n                  <small>\n                    {{session.time_start | moment 'dddd, MMMM Do YYYY h:mm a'}}  \n                  </small>\n                </h4>\n              </div>\n              <div class=\"col-md-4\">\n                <br>\n                <button class=\"modal-default-button btn btn-success\" @click=\"show = false\">\n                  <span class=\"glyphicon glyphicon-thumbs-up\"></span>\n                </button>\n              </div>\n            </div>\n\t        </div>\n\t      </div>\n\t    </div>\n\t  </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -16045,7 +16054,7 @@ exports.default = {
 	props: ['session']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"session-container\" @click=\"$parent.loadSession(session)\">\n\t\t<h4>\n\t      <span class=\"glyphicon glyphicon-star\" v-if=\"currentSession &amp;&amp; session.talk.title == currentSession.talk.title\"></span>\n\t      {{session.speaker.first_name}} {{session.speaker.last_name}}\n\n\t      <b class=\"pull-right\">\n\n\t      \t<span v-if=\" ! isNaN(session.time_start.getTime())\">\n\t      \t\t{{session.time_start | moment 'dddd, MMMM Do YYYY h:mm a'}}\n      \t\t</span>\n      \t\t<span v-else=\"\">\n      \t\t\tNot yet scheduled\n      \t\t</span>\n\n\t      </b>\n\t    </h4>\n\n\t    <hr>\n\n\t    <h4 v-if=\"session.talk &amp;&amp; session.talk.title\"> {{session.talk.title}}</h4>\n\t    <p v-if=\"session.talk\" v-html=\"session.talk.abstract\">\n\t    </p>\n\t</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"session-container\" @click=\"$root.loadSession(session)\">\n\t\t<h4>\n\t      <span class=\"glyphicon glyphicon-star\" v-if=\"$root.currentSession &amp;&amp; session.talk.title == $root.currentSession.talk.title\"></span>\n\t      {{session.speaker.first_name}} {{session.speaker.last_name}}\n\n\t      <b class=\"pull-right\">\n\n\t      \t<span v-if=\" ! isNaN(session.time_start.getTime())\">\n\t      \t\t{{session.time_start | moment 'dddd, MMMM Do YYYY h:mm a'}}\n      \t\t</span>\n      \t\t<span v-else=\"\">\n      \t\t\t{{session.day}} Time TBD\n      \t\t</span>\n\n\t      </b>\n\t    </h4>\n\n\t    <hr>\n\n\t    <h4 v-if=\"session.talk &amp;&amp; session.talk.title\"> {{session.talk.title}}</h4>\n\t    <p v-if=\"session.talk\" v-html=\"session.talk.abstract\">\n\t    </p>\n\t</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -16061,6 +16070,33 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":6,"vue-hot-reload-api":3,"vueify/lib/insert-css":7}],10:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	props: ['sessions']
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n\t<ul class=\"list-group\">\n\t\t<li class=\"list-group-item\" v-for=\"session in sessions | $parent.sessionsFilter \">\n\t\t\t<session :session=\"session\"></session>\n\t\t</li>\n\t</ul>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-7d5bd126", module.exports)
+  } else {
+    hotAPI.update("_v-7d5bd126", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":6,"vue-hot-reload-api":3,"vueify/lib/insert-css":7}],11:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -16083,6 +16119,10 @@ var _Modal = require('./Modal.vue');
 
 var _Modal2 = _interopRequireDefault(_Modal);
 
+var _SessionGroup = require('./SessionGroup.vue');
+
+var _SessionGroup2 = _interopRequireDefault(_SessionGroup);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(_vueResource2.default);
@@ -16100,10 +16140,16 @@ new _vue2.default({
 		orderBy: 'Session time',
 		orderDirection: "DESC",
 		orderingOptions: ["Last name", "First name", "Session time"],
-		groupingOptions: ['Day', 'Track'],
+		groupingOptions: ['Day', 'Stage'],
+		groups: {
+			"Day": [],
+			"Stage": []
+		},
 		groupBy: 'Day',
+		stages: [],
 		showModal: false,
-		currentSession: false
+		currentSession: false,
+		currentGroupings: {}
 	},
 	components: {
 		Session: _Session2.default, Modal: _Modal2.default
@@ -16117,6 +16163,8 @@ new _vue2.default({
 			_this.days = goodResponse.data.days;
 
 			_this.setSessions();
+			_this.putSessionsIntoGroups();
+			_this.currentGroupings = _this.groups[_this.groupBy];
 		}, function (badResponse) {
 
 			// error callback
@@ -16126,9 +16174,15 @@ new _vue2.default({
 	watch: {
 		orderBy: function orderBy() {
 			this.sortSessions();
+			this.currentGroupings = this.groups[this.groupBy];
 		},
 		orderDirection: function orderDirection() {
 			this.sortSessions();
+			this.currentGroupings = this.groups[this.groupBy];
+		},
+		groupBy: function groupBy() {
+			this.sortSessions();
+			this.currentGroupings = this.groups[this.groupBy];
 		}
 	},
 	filters: {
@@ -16184,7 +16238,9 @@ new _vue2.default({
 						session.time_start = _this3.speakingSlotForDayAndTime(day.name, session.time_start);
 						session.time_end = _this3.speakingSlotForDayAndTime(day.name, session.time_end);
 						session.day = day.name;
+						session.stage = stage.name;
 						_this3.sessions.push(session);
+						_this3.addStage(stage.name);
 					});
 				});
 			});
@@ -16199,6 +16255,11 @@ new _vue2.default({
 			});
 
 			this.sortSessions();
+		},
+		addStage: function addStage(stage) {
+			if (this.stages.indexOf(stage) === -1) {
+				this.stages.push(stage);
+			}
 		},
 		sortSessions: function sortSessions() {
 			var _this4 = this;
@@ -16242,11 +16303,41 @@ new _vue2.default({
 		loadSession: function loadSession(session) {
 			this.currentSession = session;
 			this.showModal = true;
+		},
+		putSessionsIntoGroups: function putSessionsIntoGroups() {
+			var _this5 = this;
+
+			this.sortSessions();
+
+			var stageSessions = [];
+
+			this.stages.forEach(function (stage) {
+				stageSessions.push({ "label": stage, "sessions": _this5.sessions.filter(function (session) {
+						return session.stage == stage;
+					}) });
+			});
+
+			var daySessions = [];
+			var days = ["Thursday", "Friday", "Saturday"];
+
+			days.forEach(function (day) {
+				daySessions.push({ "label": day, "sessions": _this5.sessions.filter(function (session) {
+						return session.day == day;
+					}) });
+			});
+
+			this.groups["Day"] = daySessions;
+			this.groups["Stage"] = stageSessions;
+		},
+		sessionsForDay: function sessionsForDay(day) {
+			return this.sessions.filter(function (session) {
+				return session.day == day;
+			});
 		}
 	}
 
 });
 
-},{"./Modal.vue":8,"./Session.vue":9,"vue":6,"vue-moment":4,"vue-resource":5}]},{},[10]);
+},{"./Modal.vue":8,"./Session.vue":9,"./SessionGroup.vue":10,"vue":6,"vue-moment":4,"vue-resource":5}]},{},[11]);
 
 //# sourceMappingURL=app.js.map

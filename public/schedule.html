@@ -81,11 +81,19 @@
 			</div>
 		</p>
 
-		<ul class="list-group">
-			<li class="list-group-item" v-for="session in sessions | sessionsFilter ">
-				<session :session="session"></session>
-			</li>
-		</ul>
+		<div v-for="group in currentGroupings">
+			<div v-if="group.sessions.length > 0">
+				<h2>{{group.label}}</h2>
+				<ul class="list-group">
+					<li class="list-group-item" v-for="session in group.sessions | sessionsFilter">
+						<session :session="session"></session>
+					</li>
+				</ul>
+				<hr />
+			</div>
+		</div>
+
+		
 
 		  <modal :show.sync="showModal" :session.sync="currentSession"></modal>
 	</div>
