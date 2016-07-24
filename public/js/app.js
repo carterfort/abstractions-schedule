@@ -16081,7 +16081,7 @@ exports.default = {
 	props: ['sessions']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n\t<ul class=\"list-group\">\n\t\t<li class=\"list-group-item\" v-for=\"session in sessions | $parent.sessionsFilter \">\n\t\t\t<session :session=\"session\"></session>\n\t\t</li>\n\t</ul>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
